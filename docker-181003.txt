@@ -1,0 +1,147 @@
+/etc/php/7.2/apache2/php.ini
+/etc/apache2/sites-available/000-default.conf
+===========
+docker build -t deutschgon/ubuntu:16.04 d:/php/docker
+docker commit ms deutschgon/ubuntu:16.04
+--------------------
+Open VirtualBox Manager
+Select your Docker Machine VirtualBox image (e.g.: default)
+Open Settings -> Network -> Advanced -> Port Forwarding
+Add your app name, the desired host port and your guest port
+
+docker-machine ip default
+
+docker-machine stop default
+docker-machine start default
+eval $(docker-machine env default)
+
+
+oracle VM VirtualBox 
+	포트 설정
+	127.0.0.1:80 / 80
+	127.0.0.1:8080/80
+	127.0.0.1:8001/80
+	127.0.0.1:3306/3306
+	127.0.0.1:8000/8000
+	127.0.0.1:33060/33060
+	공유폴더
+	dwww D:\PHP\docker\var\www
+
+
+docker-machine 공유폴더 마운트
+	docker-machine ssh default
+	sudo mkdir /var/www
+	sudo mount -t vboxsf dwww /var/www
+공유폴더 마운트 세팅 윈도우 부팅시 자동 실행
+	sudo vi /var/lib/boot2docker/bootlocal.sh
+	#!/bin/sh
+	mkdir /var/www
+	mount -t vboxsf dwww /var/www
+	sudo chmod +x /var/lib/boot2docker/bootlocal.sh
+
+
+--------
+docker run \
+	-p 80:80 \
+	-p 3306:3306 \
+	-p 8000:8000 \
+	-p 33060:33060 \
+	-it \
+	-v /var/www:/var/www \
+	--name ms deutschgon/ubuntu:16.04 \
+	/bin/bash
+
+service apache2 start;
+service mysql start;
+
+apt-get install unzip
+
+a2enmod rewrite;
+service apache2 restart;
+
+#for routing in symfony4
+composer require symfony/apache-pack 
+
+php /var/www/my-project/bin/console server:start 0.0.0.0:8000;
+
+
+http://localhost/info.php
+http://localhost/test.php
+http://localhost/
+
+cp /var/www/ini/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+vi 000-default.conf
+vi /etc/apache2/sites-available/000-default.conf
+====================================================================================
+composer require symfony/web-server-bundle --dev
+php bin/console server:start 0.0.0.0:8000
+php bin/console debug:router
+
+
+
+포트 확인
+netstat -ano | findstr 9000
+해당 포트 사용 프로그램 확인
+tasklist /FI "PID eq 13388"
+
+
+docker run \
+	-p 80:80 \
+	-p 3306:3306 \
+	-p 8000:8000 \
+	-p 33060:33060 \
+	-it \
+	-v /var/www:/var/www \
+	--name ms deutschgon/ubuntu:16.04 \
+	/bin/bash
+
+docker start ms;
+docker exec \
+	-it \
+	ms \
+	/bin/bash
+
+
+
+docker build \
+	--build-arg some_variable_name=a_value
+	-t deutschgon/ubuntu:16.04 d:/php/docker\
+
+
+docker-compose up -d 
+docker ps
+mysql -h 127.0.0.1 -u root -p -e "show variables like 'hostname';"
+
+sudo service apache2 start
+
+echo "Hello Docker Compose World" > //D:/PHP/docker/var/www/html/index.html
+echo "Hello Docker Compose World" > /var/www/html/index.html
+echo "Hello Docker Compose World" > index.html
+
+docker run --rm \
+	-p 80:80 \
+	-it \
+	-v /var/www:/var/www \
+	--name ms myubuntu:16.04 \
+	/bin/bash
+
+
+# MySQL
+ENV MYSQL_PWD Pwd123
+RUN echo "mysql-server mysql-server/root_password password $MYSQL_PWD" | debconf-set-selections
+RUN echo "mysql-server mysql-server/root_password_again password $MYSQL_PWD" | debconf-set-selections
+RUN apt-get -y install mysql-server
+
+# phpmyadmin
+APP_PASS="1111"
+ROOT_PASS="1111"
+APP_DB_PASS="1111"
+
+echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/app-password-confirm password $APP_PASS" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/mysql/admin-pass password $ROOT_PASS" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/mysql/app-pass password $APP_DB_PASS" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections
+
+apt-get install -y phpmyadmin

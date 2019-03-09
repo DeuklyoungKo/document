@@ -1,0 +1,187 @@
+docker-machine ssh default
+sudo mount -t vboxsf dwww /var/www
+
+/mnt/sda1/var/lib/boot2docker$ sudo vi bootlocal.sh
+#!/bin/sh
+mkdir /var/www
+mount -t vboxsf dwww /var/www
+
+
+docker-compose up -d 
+docker ps
+mysql -h 127.0.0.1 -u root -p -e "show variables like 'hostname';"
+
+sudo service apache2 start
+
+echo "Hello Docker Compose World" > //D:/PHP/docker/var/www/html/index.html
+echo "Hello Docker Compose World" > /var/www/html/index.html
+echo "Hello Docker Compose World" > index.html
+
+docker run --rm \
+	-p 80:80 \
+	-it \
+	-v /var/www:/var/www \
+	--name ms myubuntu:16.04 \
+	/bin/bash
+
+
+docker run \
+	-p 80:80 \
+	-it \
+	--name ms ubuntu \
+	/bin/bash
+
+
+docker run --rm \
+	-p 80:80 \
+	-it \
+	-v /c/Users/admin/.docker/machine/www:/var/www/html \
+	--name ms myubuntu:16.04 \
+	/bin/bash
+
+
+
+
+
+
+docker run --rm -p 80:80 -it -v D:/php/docker/www/:/var/www/ --name ms myubuntu:16.04 /bin/bash
+
+
+docker run -it --name test1 -v /c/Users/Heeseok/shared:/root/shared ubuntu
+
+
+docker-machine ssh default
+sudo -i
+--------------------
+Open VirtualBox Manager
+Select your Docker Machine VirtualBox image (e.g.: default)
+Open Settings -> Network -> Advanced -> Port Forwarding
+Add your app name, the desired host port and your guest port
+
+docker-machine ip default
+
+docker-machine stop default
+docker-machine start default
+eval $(docker-machine env default)
+
+docker-machine ssh
+
+80:80
+8080:80
+8001:80
+3306:3306
+33060:33060
+
+#making images
+docker build -t myubuntu:16.04 d:/php/docker
+
+
+
+docker run -p 80:80 -it --name webserver ubuntu:16.04 /bin/bash
+
+passwd root
+[root password]
+
+apt update -y
+apt upgrade -y
+apt install vim -y
+apt install sudo -y
+
+useradd ubuntu
+adduser ubuntu sudo
+passwd ubuntu
+su ubuntu
+
+sudo apt install apache2 -y
+sudo service apache2 start
+
+#a2enmod rewrite headers
+#a2dismod -f autoindex
+
+apt-get install php
+
+=====
+#making images
+docker build -t myubuntu:16.04 d:/php/docker
+
+#making container
+docker run \
+	-p 80:80 \
+	-it \
+	--name ms myubuntu:16.04 \
+	/bin/bash
+
+
+docker run -d \
+	-p 80:80 \
+	--name ms myubuntu:16.04
+
+
+docker run \
+	-p 80:80 \
+	-it \
+	-v "/php/docker/www/html:/var/www/html" \
+	--name ms myubuntu:16.04 \
+	/bin/bash
+
+RUN        service apache2 start
+
+
+docker attach -p 80:80 --name webserver ubuntu:16.04 -v "D:\php\docker\www:\var\www" -it /bin/bas
+
+
+docker attach -d -p 80:80 --name webserver ubuntu:16.04 -v "D:\php\docker\www:\var\www" -it /bin/bas
+
+
+
+docker run -d -p 80:80 --name webserver ubuntu:16.04 -v "D:\php\docker\www:\var\www" -it /bin/bas
+
+docker run --rm -it ubuntu:16.04 /bin/bash
+
+
+docker run -d ubuntu:16.04
+
+==
+docker run -d -p 80:80 --name webserver nginx
+curl localhost
+
+docker run -d -p 8080:8080 --name webserver2 nginx
+
+
+docker run -d -v "C:\Product\src\API:C:\inetpub\wwwroot" `
+-p 567:80 `
+--dns-search=kitchenpc.com `
+kitchenpc/api:dev
+
+
+
+docker run -d -p 80:80 --name webserver ubuntu
+
+
+docker run --rm -it ubuntu /bin/bash
+cat /etc/issue
+
+
+docker run -d -p 3307:3306 \
+  -e MYSQL_ALLOW_EMPTY_PASSWORD=true \
+  --name mysql \
+  mysql:5.7
+
+mysql -h127.0.0.1 -uroot
+
+
+
+docker run -it --link sf4_mysql --rm mysql sh -c 'exec mysql -h"192.168.99.100:3306" -P"192.168.99.100:3306" -uroot -p"root"'
+
+docker run -it --link sf4_mysql --rm mysql sh -c 'exec mysql -uroot -p"root"'
+
+docker exec -it ubuntu /bin/bash
+
+
+
+docker run -d -p 80:80 --name webserver ubuntu:latest -v "D:\php\docker\www:\var\www"
+docker run -d -p 80:80 --name webserver ubuntu:latest -v "D:\php\docker\var:\var"
+docker run -p 80:80 --name webserver ubuntu:latest
+docker exec -it webserver /bin/bash
+
+docker run --rm -it ubuntu:16.04 /bin/bash

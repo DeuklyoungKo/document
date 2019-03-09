@@ -1,0 +1,177 @@
+sudo apt-get update
+
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo apt-key fingerprint 0EBFCD88
+
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+sudo docker run hello-world
+
+
+#Post-installation steps for Linux
+sudo groupadd docker
+
+sudo usermod -aG docker $USER
+
+# If testing on a virtual machine, it may be necessary to restart the virtual machine for changes to take effect.
+
+docker run hello-world
+#ref)
+#https://docs.docker.com/install/linux/linux-postinstall/
+
+
+mkdir ~/www
+sudo chown -R ubuntu:ubuntu /home/ubuntu/www
+
+
+
+# pre-setting file
+#wget -O /home/`logname`/ini https://raw.githubusercontent.com/DeuklyoungKo/serverSetting/master/000-default.conf;
+#wget -O /home/`logname`/ini https://raw.githubusercontent.com/DeuklyoungKo/serverSetting/master/mysqld.cnf;
+#wget -O /home/`logname`/ini https://raw.githubusercontent.com/DeuklyoungKo/serverSetting/master/php.ini;
+#wget -O /home/`logname`/ini https://raw.githubusercontent.com/DeuklyoungKo/serverSetting/master/xdebug.ini;
+
+git clone git@github.com:DeuklyoungKo/symfony.git project-name
+---------------------------------------------------------
+docker rm ms;
+docker run \
+	-p 80:80 \
+	-it \
+	-v ~/www:/var/www \
+	--name aws2 deutschgon/ubuntu:16.04_AWS \
+	/bin/bash;
+
+sudo a2enmod rewrite; service apache2 start;
+
+chown -R mysql:mysql /var/lib/mysql /var/run/mysqld && \
+              service mysql start;
+mysql -u root -p;
+
+service mysql start;
+
+docker-compose up -d
+
+vi docker-compose.yml
+
+sudo vi /etc/apache2/sites-available/000-default.conf
+sudo vi /etc/apache2/sites-available/game.dgon.conf
+sudo a2ensite /etc/apache2/sites-available/game.dgon.conf
+sudo a2dissite /etc/apache2/sites-available/game.dgon.conf
+
+/var/log/mysql/error.log
+# to change public folder of Symfony4
+https://symfony.com/doc/current/configuration/override_dir_structure.html#override-web-dir
+
+wget -O 000-default.conf https://raw.githubusercontent.com/DeuklyoungKo/serverSetting/master/000-default.conf;
+---------------------------------------------------------------------
+#Git 서버 - SSH 공개키 만들기
+#SSH 공개키 만들기
+ssh-keygen
+cat ~/.ssh/id_rsa.pub
+
+#Install and configure Sendmail on Ubuntu
+# https://gist.github.com/adamstac/7462202
+#to test sendmail
+echo "Subject: test" | /usr/lib/sendmail -v deutschgon@gmail.com
+
+
+$sudo apt install net-tools
+
+tail -f /var/log/apache2/error.log
+tail -f /var/www/game/var/log/dev.log
+
+
+
+---------------------------------------------------------------------
+find / -name '*sendmail*'
+
+cp -r public /var/www/html/ps
+
+#to delete all data of docker
+#!/bin/bash
+# Delete all containers
+docker rm $(docker ps -a -q);
+# Delete all images
+docker rmi $(docker images -q);
+
+
+## install AWS CLI
+sudo apt-get update;
+sudo apt-get -y install python-pip;
+curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py";
+sudo python get-pip.py;
+
+
+
+ref)
+https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-chap-install.html
+
+
+
+ref)
+https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
+
+
+===================================================================
+docker run \
+	-p 80:80 \
+	-p 22:22 \
+	-it \
+	-e DBPASSWORD=1234 \
+	-v ~/www:/var/www \
+	--name aws2 deutschgon/ubuntu:16.04_AWS \
+	/bin/bash
+
+
+
+base=https://github.com/docker/machine/releases/download/v0.16.0 &&
+  curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
+  sudo install /tmp/docker-machine /usr/local/bin/docker-machine
+
+
+#install docker composer
+sudo apt-get -y install python-pip
+sudo pip install docker-compose
+
+mkdir /var/www
+sudo chown -R ubuntu:ubuntu www
+mkdir ini
+cd ini
+
+wget -P /home/`logname`/ini https://github.com/DeuklyoungKo/serverSetting/blob/master/000-default.conf;
+wget -P /home/`logname`/ini https://github.com/DeuklyoungKo/serverSetting/blob/master/mysqld.cnf;
+wget -P /home/`logname`/ini https://github.com/DeuklyoungKo/serverSetting/blob/master/php.ini;
+
+#set docker-compose.yml
+docker-compose -f docker.yml up -d
+
+ref) 
+https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/
+https://blog.osg.kr/archives/186
+https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
+docker-compose -f FILENAME.yml up -d
+-------------------
+testing docker
+docker --version
+docker info
+docker run hello-world
+
+
+hosts file folder
+C:\Windows\System32\drivers\etc
+
