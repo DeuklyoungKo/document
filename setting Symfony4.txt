@@ -10,7 +10,10 @@ php bin/console doctrine:fixtures:load
 
 composer require symfony/apache-pack
 
-composer require --dev phpunit
+composer require --dev symfony/phpunit-bridge
+composer require --dev symfony/browser-kit symfony/css-selector
+(https://symfony.com/doc/current/testing.html)
+
 
 composer require stof/doctrine-extensions-bundle
 (https://symfony.com/doc/master/bundles/StofDoctrineExtensionsBundle/configuration.html#add-the-extensions-to-your-mapping)
@@ -54,3 +57,11 @@ php bin/console doctrine:schema:drop --full-database --force
 
 composer require fabpot/goutte
 (https://github.com/FriendsOfPHP/Goutte)
+
+
+composer require --dev doctrine/doctrine-fixtures-bundle
+(https://symfony.com/doc/master/bundles/DoctrineFixturesBundle/index.html)
+
+composer require --dev liip/functional-test-bundle:~2.0@alpha
+(https://symfonycasts.com/screencast/phpunit/functional-tests#play)
+(https://github.com/liip/LiipFunctionalTestBundle#installation)

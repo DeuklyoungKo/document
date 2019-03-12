@@ -70,6 +70,7 @@ sudo vi /etc/apache2/sites-available/000-default.conf
 sudo vi /etc/apache2/sites-available/game.dgon.conf
 sudo a2ensite /etc/apache2/sites-available/game.dgon.conf
 sudo a2dissite /etc/apache2/sites-available/game.dgon.conf
+sudo vi /etc/apache2/sites-available/js.test.com.conf
 
 /var/log/mysql/error.log
 # to change public folder of Symfony4
@@ -137,7 +138,6 @@ docker run \
 	/bin/bash
 
 
-
 base=https://github.com/docker/machine/releases/download/v0.16.0 &&
   curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
   sudo install /tmp/docker-machine /usr/local/bin/docker-machine
@@ -174,4 +174,3 @@ docker run hello-world
 
 hosts file folder
 C:\Windows\System32\drivers\etc
-
