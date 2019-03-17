@@ -1,0 +1,61 @@
+CREATE TABLE tablename (
+  column_name1 INT PRIMARY KEY AUTO_INCREMENT,
+  column_name2 VARCHAR(15) NOT NULL,
+  column_name3 INT
+) ENGINE=INNODB;
+
+INSERT INTO tablename VALUES(값1, 값2, ...);
+UPDATE user SET password=password('새비밀번호') WHERE user='root';
+SET PASSWORD FOR root=password('새비밀번호');
+DELETE FROM tablename WEHRE 조건
+
+
+결과중 100번째부터 10개만(첫번째 레코드는 0번 부터 시작한다.)
+SELECT * FROM grade LIMIT 100, 10;
+
+SELECT * FROM tablename WHERE who LIKE "%me%";
+SELECT * FROM tablename WHERE who LIKE "%me%" OR who LIKE "%you%";
+
+select name, phone, selling
+from demo_people join demo_property
+on demo_people.pid = demo_property.pid;
+
+select name, phone, selling
+from demo_people left join demo_property
+on demo_people.pid = demo_property.pid;
+
+
+SELECT 컬럼 FROM 테이블 [WHERE 조건식]
+GROUP BY 그룹화할 컬럼 [HAVING 조건식] ORDER BY 컬럼1 [, 컬럼2, 컬럼3 ...];
+
+SELECT type, COUNT(name) AS cnt FROM hero_collection GROUP BY type;
+
+SELECT type, COUNT(name) AS cnt FROM hero_collection GROUP BY type HAVING cnt >= 2;
+
+SELECT type, COUNT(name) AS cnt FROM hero_collection
+WHERE type > 1 GROUP BY type HAVING cnt >= 2 ORDER BY type DESC;
+
+
+
+현재 시간에 1시간 더하기
+SELECT DATE_ADD(NOW(), INTERVAL 1 HOUR);
+현재 시간에 1일 더하기
+SELECT DATE_ADD(NOW(), INTERVAL 1 DAY);
+현재 시간에 1년 빼기
+SELECT DATE_ADD(NOW(), INTERVAL -1 YEAR);
+
+TRUNCATE TABLE TEST;
+
+
+-- DELETE 바로 뒤에 삭제할 테이블을 적는다.
+-- INNER JOIN
+DELETE T1, T2
+FROM T1
+INNER JOIN T2 ON T1.key = T2.key
+WHERE condition;
+ 
+-- LEFT JOIN
+DELETE T1
+FROM T1 
+LEFT JOIN T2 ON T1.key = T2.key 
+WHERE T2.key IS NULL;

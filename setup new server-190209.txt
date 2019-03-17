@@ -96,6 +96,9 @@ tail -f /var/www/game/var/log/dev.log
 
 
 
+to set Phpunit 
+https://www.lesstif.com/pages/viewpage.action?pageId=23757001
+
 ---------------------------------------------------------------------
 find / -name '*sendmail*'
 

@@ -1,0 +1,563 @@
+$sql = "SELECT * FROM some_table WHERE id = ? AND status = ? AND author = ?";
+$this->db->query($sql, array(3, 'live', 'Rick'));
+
+
+$sql = "SELECT * FROM some_table WHERE id IN ? AND status = ? AND author = ?";
+$this->db->query($sql, array(array(3, 6), 'live', 'Rick'));
+=>SELECT * FROM some_table WHERE id IN (3,6) AND status = 'live' AND author = 'Rick'
+
+error()
+if ( ! $this->db->simple_query('SELECT `example_field` FROM `example_table`'))
+{
+        $error = $this->db->error(); // Has keys 'code' and 'message'
+}
+
+
+Result Arrays
+$query = $this->db->query("YOUR QUERY");
+
+foreach ($query->result() as $row)
+{
+        echo $row->title;
+        echo $row->name;
+        echo $row->body;
+}
+
+
+$query = $this->db->query("YOUR QUERY");
+$row = $query->row_array();
+if (isset($row))
+{
+        echo $row['title'];
+        echo $row['name'];
+        echo $row['body'];
+}
+
+$row = $query->row_array(5);
+
+$row = $query->first_row()
+$row = $query->last_row()
+$row = $query->next_row()
+$row = $query->previous_row()
+
+
+Result Helper Methods
+$query = $this->db->query('SELECT * FROM my_table');
+echo $query->num_rows();
+
+$query = $this->db->query('SELECT * FROM my_table');
+echo $query->num_fields();
+
+
+$query = $this->db->query('SELECT title FROM my_table');
+foreach ($query->result() as $row)
+{
+        echo $row->title;
+}
+$query->free_result();  // The $query result object will no longer be available
+$query2 = $this->db->query('SELECT name FROM some_table');
+$row = $query2->row();
+echo $row->name;
+$query2->free_result(); // The $query2 result object will no longer be available
+
+
+$query = $this->db->query('SELECT `field_name` FROM `table_name`');
+$query->data_seek(5); // Skip the first 5 rows
+$row = $query->unbuffered_row();
+
+
+$str = $this->db->last_query();
+// Produces:  SELECT * FROM sometable....
+
+
+Making Your Queries Easier
+$data = array('name' => $name, 'email' => $email, 'url' => $url);
+$str = $this->db->insert_string('table_name', $data);
+=> INSERT INTO table_name (name, email, url) VALUES ('Rick', 'rick@example.com', 'example.com')
+
+$data = array('name' => $name, 'email' => $email, 'url' => $url);
+$where = "author_id = 1 AND status = 'active'";
+$str = $this->db->update_string('table_name', $data, $where);
+=> UPDATE table_name SET name = 'Rick', email = 'rick@example.com', url = 'example.com' WHERE author_id = 1 AND status = 'active'
+
+
+Query Builder Class
+Selecting Data
+$query = $this->db->get('mytable');  // Produces: SELECT * FROM mytable
+
+$query = $this->db->get('mytable', 10, 20); // Executes: SELECT * FROM mytable LIMIT 20, 10
+
+$query = $this->db->get('mytable');
+foreach ($query->result() as $row)
+{
+        echo $row->title;
+}
+
+
+$sql = $this->db->get_compiled_select('mytable');
+echo $sql;
+// Prints string: SELECT * FROM mytable
+//  does not run the query. This method simply returns the SQL query as a string.
+
+echo $this->db->limit(10,20)->get_compiled_select('mytable', FALSE);
+// Prints string: SELECT * FROM mytable LIMIT 20, 10
+// (in MySQL. Other databases have slightly different syntax)
+
+echo $this->db->select('title, content, date')->get_compiled_select();
+// Prints string: SELECT title, content, date FROM mytable LIMIT 20, 10
+
+$query = $this->db->get_where('mytable', array('id' => $id), $limit, $offset);
+
+
+$this->db->select('title, content, date');
+$query = $this->db->get('mytable');
+// Executes: SELECT title, content, date FROM mytable
+
+$this->db->select('(SELECT SUM(payments.amount) FROM payments WHERE payments.invoice_id=4) AS amount_paid', FALSE);
+$query = $this->db->get('mytable');
+
+$this->db->select_max('age');
+$query = $this->db->get('members');  // Produces: SELECT MAX(age) as age FROM members
+
+$this->db->select_max('age', 'member_age');
+$query = $this->db->get('members'); // Produces: SELECT MAX(age) as member_age FROM members
+
+$this->db->select_min('age');
+$query = $this->db->get('members'); // Produces: SELECT MIN(age) as age FROM members
+
+$this->db->select_avg('age');
+$query = $this->db->get('members'); // Produces: SELECT AVG(age) as age FROM members
+
+$this->db->select_sum('age');
+$query = $this->db->get('members'); // Produces: SELECT SUM(age) as age FROM members
+
+$this->db->select('title, content, date');
+$this->db->from('mytable');
+$query = $this->db->get();  // Produces: SELECT title, content, date FROM mytable
+
+$this->db->select('*');
+$this->db->from('blogs');
+$this->db->join('comments', 'comments.id = blogs.id');
+$query = $this->db->get();
+// Produces:
+// SELECT * FROM blogs JOIN comments ON comments.id = blogs.id
+
+$this->db->join('comments', 'comments.id = blogs.id', 'left');
+// Produces: LEFT JOIN comments ON comments.id = blogs.id
+
+
+Looking for Specific Data
+$this->db->where('name', $name);
+$this->db->where('title', $title);
+$this->db->where('status', $status);
+// WHERE name = 'Joe' AND title = 'boss' AND status = 'active'
+
+$this->db->where('name !=', $name);
+$this->db->where('id <', $id); // Produces: WHERE name != 'Joe' AND id < 45
+
+$array = array('name' => $name, 'title' => $title, 'status' => $status);
+$this->db->where($array);
+// Produces: WHERE name = 'Joe' AND title = 'boss' AND status = 'active'
+
+$array = array('name !=' => $name, 'id <' => $id, 'date >' => $date);
+$this->db->where($array);
+
+$where = "name='Joe' AND status='boss' OR status='active'";
+$this->db->where($where);
+
+$this->db->where('MATCH (field) AGAINST ("value")', NULL, FALSE);
+
+$this->db->where('name !=', $name);
+$this->db->or_where('id >', $id);  // Produces: WHERE name != 'Joe' OR id > 50
+
+$names = array('Frank', 'Todd', 'James');
+$this->db->where_in('username', $names);
+// Produces: WHERE username IN ('Frank', 'Todd', 'James')
+
+$names = array('Frank', 'Todd', 'James');
+$this->db->or_where_in('username', $names);
+// Produces: OR username IN ('Frank', 'Todd', 'James')
+
+$names = array('Frank', 'Todd', 'James');
+$this->db->where_not_in('username', $names);
+// Produces: WHERE username NOT IN ('Frank', 'Todd', 'James')
+
+$names = array('Frank', 'Todd', 'James');
+$this->db->or_where_not_in('username', $names);
+// Produces: OR username NOT IN ('Frank', 'Todd', 'James')
+
+$this->db->like('title', 'match');
+// Produces: WHERE `title` LIKE '%match%' ESCAPE '!'
+
+$this->db->like('title', 'match');
+$this->db->like('body', 'match');
+// WHERE `title` LIKE '%match%' ESCAPE '!' AND  `body` LIKE '%match% ESCAPE '!'
+
+$this->db->like('title', 'match', 'before');    // Produces: WHERE `title` LIKE '%match' ESCAPE '!'
+$this->db->like('title', 'match', 'after');     // Produces: WHERE `title` LIKE 'match%' ESCAPE '!'
+$this->db->like('title', 'match', 'none');      // Produces: WHERE `title` LIKE 'match' ESCAPE '!'
+$this->db->like('title', 'match', 'both');      // Produces: WHERE `title` LIKE '%match%' ESCAPE '!'
+
+$array = array('title' => $match, 'page1' => $match, 'page2' => $match);
+$this->db->like($array);
+// WHERE `title` LIKE '%match%' ESCAPE '!' AND  `page1` LIKE '%match%' ESCAPE '!' AND  `page2` LIKE '%match%' ESCAPE '!'
+
+$this->db->like('title', 'match'); $this->db->or_like('body', $match);
+// WHERE `title` LIKE '%match%' ESCAPE '!' OR  `body` LIKE '%match%' ESCAPE '!'
+
+
+$this->db->group_by("title"); // Produces: GROUP BY title
+
+$this->db->group_by(array("title", "date"));  // Produces: GROUP BY title, date
+
+$this->db->distinct();
+$this->db->get('table'); // Produces: SELECT DISTINCT * FROM table
+
+$this->db->having('user_id = 45');  // Produces: HAVING user_id = 45
+$this->db->having('user_id',  45);  // Produces: HAVING user_id = 45
+
+$this->db->having(array('title =' => 'My Title', 'id <' => $id));
+// Produces: HAVING title = 'My Title', id < 45
+
+$this->db->having('user_id',  45);  // Produces: HAVING `user_id` = 45 in some databases such as MySQL
+$this->db->having('user_id',  45, FALSE);  // Produces: HAVING user_id = 45
+
+
+Ordering results
+$this->db->order_by('title', 'DESC');
+// Produces: ORDER BY `title` DESC
+
+$this->db->order_by('title DESC, name ASC');
+// Produces: ORDER BY `title` DESC, `name` ASC
+
+$this->db->order_by('title', 'DESC');
+$this->db->order_by('name', 'ASC');
+// Produces: ORDER BY `title` DESC, `name` ASC
+
+$this->db->order_by('title', 'RANDOM');
+// Produces: ORDER BY RAND()
+
+$this->db->order_by(42, 'RANDOM');
+// Produces: ORDER BY RAND(42)
+
+
+Limiting or Counting Results
+$this->db->limit(10);  // Produces: LIMIT 10
+
+$this->db->limit(10, 20);  // Produces: LIMIT 20, 10 (in MySQL.  Other databases have slightly different syntax)
+
+echo $this->db->count_all_results('my_table');  // Produces an integer, like 25
+$this->db->like('title', 'match');
+$this->db->from('my_table');
+echo $this->db->count_all_results(); // Produces an integer, like 17
+
+echo $this->db->count_all('my_table');  // Produces an integer, like 25
+
+
+Query grouping
+$this->db->select('*')->from('my_table')
+        ->group_start()
+                ->where('a', 'a')
+                ->or_group_start()
+                        ->where('b', 'b')
+                        ->where('c', 'c')
+                ->group_end()
+        ->group_end()
+        ->where('d', 'd')
+->get();
+
+// Generates:
+// SELECT * FROM (`my_table`) WHERE ( `a` = 'a' OR ( `b` = 'b' AND `c` = 'c' ) ) AND `d` = 'd'
+
+$this->db->group_start()
+$this->db->or_group_start()
+$this->db->not_group_start()
+$this->db->or_not_group_start()
+$this->db->group_end()
+
+
+
+Inserting Data
+$data = array(
+        'title' => 'My title',
+        'name' => 'My Name',
+        'date' => 'My date'
+);
+
+$this->db->insert('mytable', $data);
+// Produces: INSERT INTO mytable (title, name, date) VALUES ('My title', 'My name', 'My date')
+
+/*
+class Myclass {
+        public $title = 'My Title';
+        public $content = 'My Content';
+        public $date = 'My Date';
+}
+*/
+
+$object = new Myclass;
+$this->db->insert('mytable', $object);
+// Produces: INSERT INTO mytable (title, content, date) VALUES ('My Title', 'My Content', 'My Date')
+
+
+$data = array(
+        'title' => 'My title',
+        'name'  => 'My Name',
+        'date'  => 'My date'
+);
+$sql = $this->db->set($data)->get_compiled_insert('mytable');
+echo $sql;
+// Produces string: INSERT INTO mytable (`title`, `name`, `date`) VALUES ('My title', 'My name', 'My date')
+//does not run the query
+
+echo $this->db->set('title', 'My Title')->get_compiled_insert('mytable', FALSE);
+// Produces string: INSERT INTO mytable (`title`) VALUES ('My Title')
+echo $this->db->set('content', 'My Content')->get_compiled_insert();
+// Produces string: INSERT INTO mytable (`title`, `content`) VALUES ('My Title', 'My Content')
+
+
+$data = array(
+        array(
+                'title' => 'My title',
+                'name' => 'My Name',
+                'date' => 'My date'
+        ),
+        array(
+                'title' => 'Another title',
+                'name' => 'Another Name',
+                'date' => 'Another date'
+        )
+);
+$this->db->insert_batch('mytable', $data);
+// Produces: INSERT INTO mytable (title, name, date) VALUES ('My title', 'My name', 'My date'),  ('Another title', 'Another name', 'Another date')
+// runs the query. You can either pass an array or an object to the function
+
+
+
+Updating Data
+$data = array(
+        'title' => 'My title',
+        'name'  => 'My Name',
+        'date'  => 'My date'
+);
+$this->db->replace('table', $data);
+// Executes: REPLACE INTO mytable (title, name, date) VALUES ('My title', 'My name', 'My date')
+
+$this->db->set('name', $name);
+$this->db->insert('mytable');  // Produces: INSERT INTO mytable (`name`) VALUES ('{$name}')
+
+
+$this->db->set('name', $name);
+$this->db->set('title', $title);
+$this->db->set('status', $status);
+$this->db->insert('mytable');
+
+
+$this->db->set('field', 'field+1', FALSE);
+$this->db->where('id', 2);
+$this->db->update('mytable'); // gives UPDATE mytable SET field = field+1 WHERE id = 2
+
+$this->db->set('field', 'field+1');
+$this->db->where('id', 2);
+$this->db->update('mytable'); // gives UPDATE `mytable` SET `field` = 'field+1' WHERE `id` = 2
+
+
+$array = array(
+        'name' => $name,
+        'title' => $title,
+        'status' => $status
+);
+$this->db->set($array);
+$this->db->insert('mytable');
+
+
+/*
+class Myclass {
+        public $title = 'My Title';
+        public $content = 'My Content';
+        public $date = 'My Date';
+}
+*/
+$object = new Myclass;
+$this->db->set($object);
+$this->db->insert('mytable');
+
+
+$data = array(
+        'title' => $title,
+        'name' => $name,
+        'date' => $date
+);
+$this->db->where('id', $id);
+$this->db->update('mytable', $data);
+//Produces:
+//      UPDATE mytable
+//      SET title = '{$title}', name = '{$name}', date = '{$date}'
+//      WHERE id = $id
+
+/*
+class Myclass {
+        public $title = 'My Title';
+        public $content = 'My Content';
+        public $date = 'My Date';
+}
+*/
+
+$object = new Myclass;
+$this->db->where('id', $id);
+$this->db->update('mytable', $object);
+// Produces:
+// UPDATE `mytable`
+// SET `title` = '{$title}', `name` = '{$name}', `date` = '{$date}'
+// WHERE id = `$id`
+
+$this->db->update('mytable', $data, "id = 4");
+$this->db->update('mytable', $data, array('id' => $id));
+
+
+$data = array(
+   array(
+      'title' => 'My title' ,
+      'name' => 'My Name 2' ,
+      'date' => 'My date 2'
+   ),
+   array(
+      'title' => 'Another title' ,
+      'name' => 'Another Name 2' ,
+      'date' => 'Another date 2'
+   )
+);
+$this->db->update_batch('mytable', $data, 'title');
+// Produces:
+// UPDATE `mytable` SET `name` = CASE
+// WHEN `title` = 'My title' THEN 'My Name 2'
+// WHEN `title` = 'Another title' THEN 'Another Name 2'
+// ELSE `name` END,
+// `date` = CASE
+// WHEN `title` = 'My title' THEN 'My date 2'
+// WHEN `title` = 'Another title' THEN 'Another date 2'
+// ELSE `date` END
+// WHERE `title` IN ('My title','Another title')
+
+
+$this->db->get_compiled_update()
+
+
+
+Deleting Data
+$this->db->delete('mytable', array('id' => $id));  // Produces: DELETE FROM mytable WHERE id = $id
+
+$this->db->where('id', $id);
+$this->db->delete('mytable');
+// Produces: DELETE FROM mytable WHERE id = $id
+
+$tables = array('table1', 'table2', 'table3');
+$this->db->where('id', '5');
+$this->db->delete($tables);
+//An array of table names can be passed into delete() if you would like to delete data from more than 1 table.
+
+
+$this->db->empty_table('mytable'); // Produces: DELETE FROM mytable
+
+$this->db->from('mytable');
+$this->db->truncate();
+// or
+$this->db->truncate('mytable');
+// Produce: TRUNCATE mytable
+
+
+$this->db->get_compiled_delete()
+
+
+
+Method Chaining
+$query = $this->db->select('title')
+                ->where('id', $id)
+                ->limit(10, 20)
+                ->get('mytable');
+
+
+$this->db->start_cache();
+$this->db->select('field1');
+$this->db->stop_cache();
+$this->db->get('tablename');
+//Generates: SELECT `field1` FROM (`tablename`)
+
+$this->db->select('field2');
+$this->db->get('tablename');
+//Generates:  SELECT `field1`, `field2` FROM (`tablename`)
+
+$this->db->flush_cache();
+$this->db->select('field2');
+$this->db->get('tablename');
+//Generates:  SELECT `field2` FROM (`tablename`)
+
+
+
+Resetting Query Builder
+// Note that the second parameter of the get_compiled_select method is FALSE
+$sql = $this->db->select(array('field1','field2'))
+                                ->where('field3',5)
+                                ->get_compiled_select('mytable', FALSE);
+// ...
+// Do something crazy with the SQL code... like add it to a cron script for
+// later execution or something...
+// ...
+$data = $this->db->get()->result_array();
+// Would execute and return an array of results of the following query:
+// SELECT field1, field1 from mytable where field3 = 5;
+
+
+
+Running Transactions
+$this->db->trans_start();
+$this->db->query('AN SQL QUERY...');
+$this->db->query('ANOTHER QUERY...');
+$this->db->query('AND YET ANOTHER QUERY...');
+$this->db->trans_complete();
+
+
+Managing Errors
+$this->db->trans_start();
+$this->db->query('AN SQL QUERY...');
+$this->db->query('ANOTHER QUERY...');
+$this->db->trans_complete();
+
+if ($this->db->trans_status() === FALSE)
+{
+        // generate an error... or use the log_message() function to log your error
+}
+
+
+$this->db->trans_off();	//If you would like to disable transactions you can do so using
+$this->db->trans_start();
+$this->db->query('AN SQL QUERY...');
+$this->db->trans_complete();
+
+
+
+Running Transactions Manually
+$this->db->trans_begin();
+$this->db->query('AN SQL QUERY...');
+$this->db->query('ANOTHER QUERY...');
+$this->db->query('AND YET ANOTHER QUERY...');
+if ($this->db->trans_status() === FALSE)
+{
+        $this->db->trans_rollback();
+}
+else
+{
+        $this->db->trans_commit();
+}
+
+
+$this->db->call_function('some_function', $param1, $param2, etc..);
+
+
+
+Using the Database Utilities
+if ($this->dbutil->database_exists('database_name'))
+{
+        // some code...
+}
+

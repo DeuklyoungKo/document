@@ -1,0 +1,38 @@
+.htaccess
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]
+	
+
+
+natanfelles/codeigniter-phpstorm
+https://github.com/natanfelles/codeigniter-phpstorm
+
+unittest
+https://github.com/kenjis/ci-phpunit-test
+
+=========================
+문자열 함수
+정규식 샘플
+phpunit 명령어
+
+type체크
+is_string
+
+
+
+https://github.com/kenjis/ci-phpunit-test
+
+
+유닛테스트 설치(Xdebug  필요)
+https://www.lesstif.com/pages/viewpage.action?pageId=23757001
+
+git
+
+
+
+
+
+00000000000000000
+phar:///usr/local/bin/phpunit.phar/php-code-coverage/CodeCoverage/Report/HTML/Renderer/File.php
